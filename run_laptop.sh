@@ -4,7 +4,7 @@ size_list=(2 20 200 2000 20000 200000 2000000 20000000 200000000)
 
 ./compile.sh
 
-schedule_list=("static")
+schedule_list=("static,4096")
 
 threads_list=(1 4 6 8 12 24)
 
