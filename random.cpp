@@ -18,7 +18,7 @@ int main(int argc, char** argv, char** env) {
     uint32_t thread_seed=0;
     std::size_t i = 0;
 
-    #pragma omp parallel shared(numbers) private(i, thread_seed) default(none) 
+    #pragma omp parallel shared(numbers, size) private(i, thread_seed) default(none) 
     {
         thread_seed = time(NULL) ^ getpid() ^ pthread_self();
         #pragma omp for schedule(runtime)
