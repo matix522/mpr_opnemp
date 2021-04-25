@@ -15,7 +15,6 @@ int main(int argc, char** argv, char** env) {
     std::vector<int32_t> numbers;
     numbers.resize(size);
 
-    omp_set_num_threads( 4 );
     uint32_t thread_seed=0;
     std::size_t i = 0;
 

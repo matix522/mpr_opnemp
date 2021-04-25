@@ -14,14 +14,9 @@ int main(int argc, char** argv, char** env) {
     std::vector<int32_t> numbers;
     numbers.resize(size);
 
-    uint32_t thread_seed=0;
-    std::size_t i = 0;
-
-    srand(time(NULL));
-
-    for (i = 0; i < size; i++) 
-    {
-        numbers[i] = rand() % size;
+    uint32_t thread_seed = time(NULL) ^ getpid() ^ pthread_self();
+    for (std::size_t i = 0; i < size; i++) {
+        numbers[i] = rand_r(&thread_seed) % size;
     } 
     return 0;
 }

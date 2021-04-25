@@ -14,8 +14,16 @@ for size in  "${size_list[@]}"; do
 done
 
 
-echo -e "iters\tscheduling\ttab_size\ttime" > par_results.tsv
+export OMP_NUM_THREADS=1
+echo -e "iters\tscheduling\ttab_size\ttime" > par_1_thread_results.tsv
+for size in  "${size_list[@]}"; do
+    for iter in {0..9}; do
+        echo -e "${iter}\t${non_applicable}\t${size}\t"`(time ./random_seq ${size}) 2>&1 | grep "real" | awk '{print $2}'` >> par_1_thread_results.tsv
+    done
+done
 
+export OMP_NUM_THREADS=4
+echo -e "iters\tscheduling\ttab_size\ttime" > par_results.tsv
 for schedule in "${schedule_list[@]}"; do
     for size in  "${size_list[@]}"; do
         for iter in {0..9}; do
