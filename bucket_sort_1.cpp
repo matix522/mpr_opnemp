@@ -27,6 +27,10 @@ std::vector<Bucket> preallocate_buckets(std::size_t per_thread_bucket_count)
     std::vector<Bucket> buckets;
     buckets.resize(per_thread_bucket_count);
     for (auto& bucket : buckets) {
+        // AS WE DONT KNOW THE DISTRIBUTION OF OUR INTS WE CAN ASSUME UNIFORM DISTRIBUTION
+        // PREALOCATING EXPECTED MEAN VALUE IS NOT THE BEST IDEA AS WE CAN EASLIY CASUE REALOCATION 
+        // BY ADDING BUCKET_RANGE-TH ELEMENT. 
+        // MAKING THE PREALOCATED VALUE DOUBLE OF WHAT WE EXPECT MOSTLY SOLVES THAT PROBLEM 
         bucket.reserve(2 * BUCKET_RANGE);
     }
     return buckets;
