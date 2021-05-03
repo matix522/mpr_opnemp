@@ -74,6 +74,7 @@ void from_array_insert_into_buckets(std::vector<Bucket>& buckets,
                                     const int32_t thread_minimum, 
                                     const int32_t thread_maximum) 
 {
+    // A COPY OF THE LOOP IS USED TO AVOID CHECKS OR MODULO OPERATIONS
     for (std::size_t i = iter_start; i < numbers.size(); i++) {
         const int32_t value = numbers[i];
         if (value < thread_minimum || value >= thread_maximum) {
