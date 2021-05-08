@@ -8,10 +8,9 @@
 #include <cassert>
 #include <boost/container/small_vector.hpp>
 
-constexpr std::size_t BUCKET_RANGE = 256;
+std::size_t BUCKET_RANGE;
 
- // THIS WILL ALLOW US TO USE ONE MAIN ALLOCATION FOR ALL BUCKETS AND THEN MAKE ADDITIONAL ALLOCATION WHEN NEEDED.
-using Bucket = boost::container::small_vector<int32_t, BUCKET_RANGE * 2>;
+using Bucket = std::vector<int32_t>; 
 
 struct Timestamps {
     double program_start;                       // a_start, e_start
@@ -119,11 +118,12 @@ std::vector<int32_t> prepare_random_numbers(const std::size_t size, const int32_
 
 int main(int argc, char** argv, char** env) {
     
-    if (argc < 2) {
-        std::cerr << "provide size of problem" << std::endl;
+    if (argc < 3) {
+        std::cerr << "provide size of problem, and bucket integer range" << std::endl;
         return 1;
     }
     const std::size_t size = std::stol(argv[1]);
+    BUCKET_RANGE =  std::stol(argv[2]);
 
     const int32_t minimum = 0;
     const int32_t maximum = size;
@@ -136,7 +136,7 @@ int main(int argc, char** argv, char** env) {
 
     std::vector<std::size_t> bucket_element_counts;
 
-    #pragma omp parallel shared(numbers, size, minimum, maximum, value_difference, bucket_element_counts, timestamps) default(none)
+    #pragma omp parallel shared(numbers, size, minimum, maximum, value_difference, bucket_element_counts, timestamps, BUCKET_RANGE) default(none)
     {
         const uint32_t thread_count = omp_get_num_threads();
         const uint32_t thread_id = omp_get_thread_num();
@@ -183,7 +183,6 @@ int main(int argc, char** argv, char** env) {
     const double d = timestamps.from_buckets_into_array_finished - timestamps.sorting_buckets_finished;
     const double e = timestamps.from_buckets_into_array_finished - timestamps.program_start;
 
-    printf("a\t\tb\t\tc\t\td\t\te\n");
     printf("%fs\t%fs\t%fs\t%fs\t%fs\n", a, b, c, d, e);
 
     return 0;
